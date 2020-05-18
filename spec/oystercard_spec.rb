@@ -40,12 +40,32 @@ describe Oystercard do
       expect(subject).to respond_to(:touch_in)
     end
 
+    it 'makes a customer be in journey' do
+      expect(subject.touch_in).to eq(true)
+    end
+
     it 'knows if a card is being touched out' do
       expect(subject).to respond_to(:touch_out)
     end
 
+    it 'knows if a card has been touched out and interupt the journey' do
+      expect(subject.touch_out).to eq(false)
+    end
+
     it 'knows if a card is being used in journey' do
       expect(subject).to respond_to(:in_journey?)
+    end
+
+    it 'knows if a card is currently in journey' do
+      card = Oystercard.new
+      card.touch_in
+      expect(card.in_journey?).to eq(true)
+    end
+
+    it 'knows if a card is not currently in use' do
+      card = Oystercard.new
+      card.touch_out
+      expect(card.in_journey?).to eq(false)
     end
 
   end
