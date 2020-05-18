@@ -5,6 +5,9 @@ describe Oystercard do
   it 'balance has default balance of 0' do
     expect(subject.instance_variable_get :@balance).to eq(0)
   end
+  it 'initiates a injourney instance variable equal to false' do
+    expect(subject.instance_variable_get :@injourney).to eq(false)
+  end
   it 'respond to top_up method' do
     expect(subject).to respond_to(:top_up).with(1).argument
   end
@@ -36,5 +39,14 @@ describe Oystercard do
     it 'knows if a card is being touched in' do
       expect(subject).to respond_to(:touch_in)
     end
+
+    it 'knows if a card is being touched out' do
+      expect(subject).to respond_to(:touch_out)
+    end
+
+    it 'knows if a card is being used in journey' do
+      expect(subject).to respond_to(:in_journey?)
+    end
+
   end
 end
