@@ -31,4 +31,10 @@ describe Oystercard do
        expect(test_variable.fare).to eq(9)
      end
   end
+
+  context 'barriers' do
+    it 'knows if a card is being touched in' do
+      expect(subject).to respond_to(:touch_in)
+    end
+  end
 end

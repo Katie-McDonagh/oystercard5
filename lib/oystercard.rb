@@ -22,4 +22,7 @@ class Oystercard
     @balance -= FARE
   end
 
+  def touch_in
+  end
+
 end
