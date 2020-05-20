@@ -1,3 +1,5 @@
+require 'journey'
+
 class Oystercard
 
   attr_reader :balance, :journey
@@ -24,11 +26,15 @@ end
 
       fail "Please top up before starting your journey" if @balance < MINBALANCE
 
+      @current_journey = Journey.new
+
+      @current_journey.start_journey(station)
+
       @journey.push({entry_station: station})
   end
 
   def touch_out(station)
-    fare
+    deduct
     @journey[-1].store(:exit_station, station)
   end
 
@@ -38,7 +44,7 @@ end
   end
 
   private
-  def fare
+  def deduct
     @balance -= FARE
   end
 end
