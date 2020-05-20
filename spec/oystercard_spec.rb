@@ -2,6 +2,8 @@ require 'oystercard'
 
 describe Oystercard do
   subject = Oystercard.new
+  let(:kingscross) { double('station') }
+  let(:angel) { double("station") }
   it 'balance has default balance of 0' do
     expect(subject.instance_variable_get :@balance).to eq(0)
   end
@@ -11,7 +13,7 @@ describe Oystercard do
   it 'respond to top_up method' do
     expect(subject).to respond_to(:top_up).with(1).argument
   end
-  it 'respond to fare method' do
+  xit 'respond to fare method' do
     expect(subject).to respond_to(:fare)
   end
 
@@ -40,33 +42,72 @@ describe Oystercard do
       expect(subject).to respond_to(:touch_in)
     end
 
-    it 'makes a customer be in journey' do
-      expect(subject.touch_in).to eq(true)
+    it 'does not allow card to touch in if below MINBALANCE' do
+      expect{ subject.touch_in(kingscross) }.to raise_error("Please top up before starting your jounrey")
+    end
+
+    it 'knows if a card is in_journey' do
+      card = Oystercard.new
+      card.top_up(10)
+      card.touch_in(kingscross)
+      expect(card).to be_in_journey
     end
 
     it 'knows if a card is being touched out' do
       expect(subject).to respond_to(:touch_out)
     end
 
-    it 'knows if a card has been touched out and interupt the journey' do
-      expect(subject.touch_out).to eq(false)
+    it 'charges the fare upon arrival at destination' do
+      card = Oystercard.new
+      card.top_up(10)
+      card.touch_in(kingscross)
+      expect { card.touch_out(angel) }.to change { card.balance }. by (-Oystercard::FARE)
     end
 
-    it 'knows if a card is being used in journey' do
-      expect(subject).to respond_to(:in_journey?)
+    it 'knows if a card has been touched out and interupts the journey' do
+      card = Oystercard.new
+      card.top_up(10)
+      card.touch_in(kingscross)
+      card.touch_out(angel)
+     expect(card).to_not be_in_journey
     end
 
     it 'knows if a card is currently in journey' do
       card = Oystercard.new
-      card.touch_in
-      expect(card.in_journey?).to eq(true)
+      card.top_up(10)
+      card.touch_in(kingscross)
+     expect(card).to be_in_journey
     end
 
     it 'knows if a card is not currently in use' do
       card = Oystercard.new
-      card.touch_out
+      card.touch_out(angel)
       expect(card.in_journey?).to eq(false)
     end
+  end
 
+  context 'station' do
+    it 'stores the enrty station whilst in transit' do
+    card = Oystercard.new
+    card.top_up(10)
+    card.touch_in(kingscross)
+    expect(card.entry_station).to eq(kingscross) 
+    end
+
+    it 'resets the entry station after touch out' do
+      card = Oystercard.new
+      card.top_up(1)
+      card.touch_in(kingscross)
+      card.touch_out(angel) 
+      expect(card.entry_station).to be_nil
+    end
+
+    it 'stores the data from completed journeys' do
+      card = Oystercard.new
+      card.top_up(10)
+      card.touch_in(kingscross)
+      card.touch_out(angel)
+      expect(card.journey).to include ( {entry_station: kingscross, exit_station: angel})
+    end
   end
 end
