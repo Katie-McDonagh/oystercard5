@@ -72,22 +72,9 @@ describe Oystercard do
       subject.touch_out(angel)
       expect(subject.in_journey?).to eq(false)
     end
-  end
 
-  context 'station' do
-
-    before do
-      subject.top_up(10)
-      subject.touch_in(kingscross)
-    end
-
-    # it 'stores the enrty station whilst in transit' do
-    #   expect(subject.journey).to include ( {entry_station: kingscross})
-    # end
-
-    it 'stores the data from completed journeys' do
-      subject.touch_out(angel)
-      expect(subject.journey).to include ( {entry_station: kingscross, exit_station: angel})
+    it 'charges a customer if they touch in without touching out' do 
+      expect { subject.touch_in(angel) }.to change { subject.balance }. by (-Oystercard::PENALTYCHARGE)
     end
   end
 end
