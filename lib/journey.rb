@@ -1,16 +1,18 @@
 class Journey
 
-def initialize
+  attr_reader :current_journey
 
-    @journey = {} 
+  def initialize(station)
+    @current_journey = {entry_station: station}
+  end
 
-end
+  def end_journey(station)
+    @current_journey.store(:exit_station, station)
+  end
 
-
-def start_journey(station)
-
-@journey.store(:entry_station, station)
-
-    end
+  def journey_check
+    return false if @current_journey.empty?
+    @current_journey.length == 1
+  end
 
 end

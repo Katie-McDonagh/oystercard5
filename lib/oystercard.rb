@@ -25,22 +25,21 @@ end
   def touch_in(station)
 
       fail "Please top up before starting your journey" if @balance < MINBALANCE
+      @current_journey = Journey.new(station)
+      #
+      # @current_journey.start_journey(station)
 
-      @current_journey = Journey.new
-
-      @current_journey.start_journey(station)
-
-      @journey.push({entry_station: station})
+      #@journey.push({entry_station: station})
   end
 
   def touch_out(station)
+    @current_journey.end_journey(station)
+    @journey.push(@current_journey.current_journey)
     deduct
-    @journey[-1].store(:exit_station, station)
   end
 
   def in_journey?
-    return false if @journey.empty?
-    @journey.last.length == 1
+    @current_journey.journey_check
   end
 
   private
