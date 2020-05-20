@@ -20,26 +20,21 @@ end
       @balance += money
   end
 
-  def touch_in(station) 
+  def touch_in(station)
 
       fail "Please top up before starting your journey" if @balance < MINBALANCE
 
       @journey.push({entry_station: station})
-
-    @injourney = true
-    #@entry_station = station
   end
 
   def touch_out(station)
-    fare 
+    fare
     @journey[-1].store(:exit_station, station)
-    @injourney = false
-    @entry_station = nil
   end
 
   def in_journey?
     return false if @journey.empty?
-    @journey.last.length == 1 
+    @journey.last.length == 1
   end
 
   private
@@ -47,6 +42,3 @@ end
     @balance -= FARE
   end
 end
-
-
-
