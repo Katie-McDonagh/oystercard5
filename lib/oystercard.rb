@@ -1,17 +1,17 @@
-require 'journey'
+require_relative 'journey'
 
 class Oystercard
 
-  attr_reader :balance
+  attr_reader :balance, :current_journey
 
   MAXBALANCE = 90
   MINBALANCE = 1
   FARE = 1
   PENALTYCHARGE = 6
 
-  def initialize
+  def initialize(current_journey = Journey.new)
     @balance = 0
-    @current_journey = Journey.new
+    @current_journey = current_journey
 end
 
   def top_up(money)
@@ -27,14 +27,14 @@ end
 
       fail "Please top up before starting your journey" if @balance < MINBALANCE
 
-       deduct(PENALTYCHARGE) if in_journey? 
+       deduct(PENALTYCHARGE) if in_journey? # move functionality to journey class
 
        @current_journey.start_journey(station)
   end
 
   def touch_out(station)
     @current_journey.end_journey(station)
-    deduct(FARE)
+    deduct(FARE) # move to journey class 
   end
 
   def in_journey?

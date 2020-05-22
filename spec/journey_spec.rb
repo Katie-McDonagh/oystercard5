@@ -4,7 +4,7 @@ describe Journey do
   subject { Journey.new }
 
   let(:kingscross) { double('station') }
-  let(:angel) { double("station") }
+  let(:angel) { double('station') }
 
   it 'starts a journey by adding entry_station to instance Variable' do
     subject.start_journey(angel)
@@ -22,4 +22,13 @@ describe Journey do
     expect(subject.journey_check).to be true
   end
 
+  context 'fare' do 
+  # it 'should know fare exists' do 
+  #   expect(subject).to respond_to(:fare)
+  # end
+
+  # it 'has a penalty fare by default' do
+  #   expect(subject.fare).to eq Journey::PENALTY_FARE
+  # end
+end
 end
