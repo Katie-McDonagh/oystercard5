@@ -34,11 +34,11 @@ end
 
   def touch_out(station)
     @current_journey.end_journey(station)
-    deduct(FARE) # move to journey class 
+    deduct(FARE) # move to journey class
   end
 
   def in_journey?
-    @current_journey.journey_check
+    !@current_journey.complete?
   end
 
   private
